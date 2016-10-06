@@ -7,6 +7,8 @@ import 'dart:convert';
 import 'package:googleapis_auth/auth_io.dart';
 import 'package:http/http.dart' as http;
 
+import './common.dart';
+
 /// Represents credentials for a user.
 class UserCredentials {
   /// The clientId.
@@ -88,7 +90,7 @@ class _Flow {
         <List<int>>[UTF8.encode(requestParameters)]);
     var request =
         new _RequestImpl('POST', Uri.parse(_googleOAuth2TokenUrl), body);
-    request.headers['content-type'] = _contentTypeUrlEncoded;
+    request.headers['content-type'] = contentTypeUrlEncoded;
 
     var httpResponse = await _client.send(request);
     var object = await httpResponse.stream
@@ -109,7 +111,7 @@ class _Flow {
       throw new Exception(
           'Unable to obtain credentials. Invalid response from server.');
     }
-    var accessToken = new AccessToken(tokenType, token, _expiryDate(expiresIn));
+    var accessToken = new AccessToken(tokenType, token, expiryDate(expiresIn));
     return new AccessCredentials(accessToken, null, _scopes);
   }
 }
@@ -130,18 +132,3 @@ class _RequestImpl extends http.BaseRequest {
   }
 }
 
-/// Constant for the 'application/x-www-form-urlencoded' content type
-const _contentTypeUrlEncoded =
-    'application/x-www-form-urlencoded; charset=utf-8';
-
-/// Due to differences of clock speed, network latency, etc. we
-/// will shorten expiry dates by 20 seconds.
-const _maxExpectedTimeDiffInSeconds = 20;
-
-/// Constructs a [DateTime] which is [seconds] seconds from now with
-/// an offset of [_maxExpectedTimeDiffInSeconds]. Result is UTC time.
-DateTime _expiryDate(int seconds) {
-  return new DateTime.now()
-      .toUtc()
-      .add(new Duration(seconds: seconds - _maxExpectedTimeDiffInSeconds));
-}

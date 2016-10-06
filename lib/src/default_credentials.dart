@@ -10,6 +10,7 @@ import 'package:http/http.dart';
 import 'package:path/path.dart' as path;
 
 import './user_credentials.dart';
+import './metadata_server.dart';
 
 const _credentialEnvVar = 'GOOGLE_APPLICATION_CREDENTIALS';
 
@@ -39,7 +40,8 @@ Future<AccessCredentials> obtainDefaultAccessCredentials(
   }
   try {
     if (credentials == null && await _runningOnComputeEngine()) {
-      credentials = await obtainAccessCredentialsViaMetadataServer(baseClient);
+      credentials =
+          await obtainAccessCredentialsViaMetadataServerFix(baseClient);
     }
   } catch (_) {
     // Try next option.
