@@ -2,7 +2,7 @@ name: googleapis_auth_default_credentials
 description: An implementation of application default credentials for Dart.
 version: 0.1.0
 author: Kwang Yul Seo <kwangyul.seo@gmail.com>
-#homepage: https://www.example.com
+homepage: https://github.com/kseo/googleapis_auth_default_credentials
 
 environment:
   sdk: '>=1.0.0 <2.0.0'
